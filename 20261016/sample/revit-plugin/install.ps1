@@ -6,8 +6,9 @@ param([string]$Version = "2024")
 $ErrorActionPreference = "Stop"
 $addinDir = "$env:APPDATA\Autodesk\Revit\Addins\$Version"
 New-Item -ItemType Directory -Force $addinDir | Out-Null
-$dll = "bin\Release.R$Version\net48\RfiPlugin.dll"
-if (-not (Test-Path $dll)) { throw "找不到 $dll，先跑 dotnet build -c Release.R$Version" }
+$cfg = "Release.R$($Version.Substring(2))"
+$dll = "bin\$cfg\net48\RfiPlugin.dll"
+if (-not (Test-Path $dll)) { throw "找不到 $dll，先跑 dotnet build -c $cfg" }
 Copy-Item RfiPlugin.addin (Join-Path $addinDir "RfiPlugin.addin") -Force
 Copy-Item $dll (Join-Path $addinDir "RfiPlugin.dll") -Force
 Write-Host "已部署到 $addinDir，重開 Revit $Version 即可使用" -ForegroundColor Green
